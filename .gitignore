@@ -27,3 +27,4 @@ __pycache__/
 # Ignore user setup files
 designs/user_setup/
 designs/user_config
+designs/stuff/
