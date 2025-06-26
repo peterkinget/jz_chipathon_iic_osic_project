@@ -9,3 +9,5 @@ tree() {
 }
 
 export PATH="/foss/designs/user_setup/bin:$PATH"
+
+cd /foss/designs
