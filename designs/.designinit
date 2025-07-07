@@ -17,3 +17,7 @@ tree() {
 export PATH="/foss/designs/user_setup/bin:$PATH"
 
 cd /foss/designs
+
+echo '+-------------------------------------------------+'
+echo '| Initialize the PDK with "source ./setup_pdk.sh" |'
+echo '+-------------------------------------------------+'

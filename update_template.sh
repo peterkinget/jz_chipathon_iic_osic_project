@@ -7,7 +7,7 @@
 export GIT_MERGE_AUTOEDIT=no
 
 TEMPLATE_REPO="https://github.com/Jianxun/iic-osic-tools-project-template.git"
-TEMPLATE_BRANCH="main"
+TEMPLATE_BRANCH="klayout_libs"
 
 # Function to prompt user for confirmation
 prompt_user() {
@@ -24,7 +24,7 @@ prompt_user() {
 # Function to handle merge conflicts automatically
 resolve_conflicts_automatically() {
     echo ""
-    echo "ğŸ”§ Merge conflicts detected. Here are your options:"
+    echo "ğ§ Merge conflicts detected. Here are your options:"
     echo "1) Accept template version (recommended for most users)"
     echo "2) Accept your current version"
     echo "3) Abort update and resolve manually"
@@ -34,21 +34,21 @@ resolve_conflicts_automatically() {
         read -p "Choose option (1/2/3): " choice
         case $choice in
             1)
-                echo "âœ… Accepting template version for all conflicts..."
+                echo "â Accepting template version for all conflicts..."
                 git checkout --theirs .
                 git add .
                 git commit -m "Merge template updates (accepted template version)"
                 return 0
                 ;;
             2)
-                echo "âœ… Keeping your current version for all conflicts..."
+                echo "â Keeping your current version for all conflicts..."
                 git checkout --ours .
                 git add .
                 git commit -m "Merge template updates (kept local version)"
                 return 0
                 ;;
             3)
-                echo "âŒ Aborting update. Run 'git merge --abort' to cancel the merge."
+                echo "â Aborting update. Run 'git merge --abort' to cancel the merge."
                 git merge --abort
                 return 1
                 ;;
@@ -61,84 +61,84 @@ resolve_conflicts_automatically() {
 
 # Check if we're inside a git repository
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "âŒ This is not a git repository. Please run this script from inside your project folder."
+  echo "â This is not a git repository. Please run this script from inside your project folder."
   exit 1
 fi
 
 # Check for uncommitted changes
 if ! git diff-index --quiet HEAD --; then
-    echo "âš ï¸  You have uncommitted changes in your repository."
+    echo "â ï¸  You have uncommitted changes in your repository."
     echo "   It's recommended to commit or stash your changes before updating."
     if ! prompt_user "Do you want to continue anyway?"; then
-        echo "âŒ Update cancelled. Please commit your changes first."
+        echo "â Update cancelled. Please commit your changes first."
         exit 1
     fi
 fi
 
 # Show what this script will do
-echo "ğŸ”„ Template Update Script"
+echo "ğ Template Update Script"
 echo "========================"
 echo "This script will:"
-echo "â€¢ Fetch the latest changes from the template repository"
-echo "â€¢ Attempt to merge them into your current branch"
-echo "â€¢ Help resolve any conflicts that arise"
+echo "â¢ Fetch the latest changes from the template repository"
+echo "â¢ Attempt to merge them into your current branch"
+echo "â¢ Help resolve any conflicts that arise"
 echo ""
 echo "Template repository: $TEMPLATE_REPO"
 echo "Template branch: $TEMPLATE_BRANCH"
 echo ""
 
 if ! prompt_user "Do you want to proceed with the update?"; then
-    echo "âŒ Update cancelled by user."
+    echo "â Update cancelled by user."
     exit 0
 fi
 
 # Check if 'upstream' remote already exists
 if git remote get-url upstream > /dev/null 2>&1; then
-  echo "ğŸ”„ Using existing 'upstream' remote."
+  echo "ğ Using existing 'upstream' remote."
 else
-  echo "â• Adding upstream remote: $TEMPLATE_REPO"
+  echo "â Adding upstream remote: $TEMPLATE_REPO"
   git remote add upstream "$TEMPLATE_REPO"
 fi
 
 # Fetch updates from upstream
-echo "ğŸ“¥ Fetching updates from upstream..."
+echo "ğ¥ Fetching updates from upstream..."
 git fetch upstream
 
 # Show what changes are available
 echo ""
-echo "ğŸ“Š Checking for available updates..."
+echo "ğ Checking for available updates..."
 CHANGES=$(git log HEAD..upstream/$TEMPLATE_BRANCH --oneline --no-merges 2>/dev/null | wc -l)
 if [ "$CHANGES" -eq 0 ]; then
-    echo "âœ… Your project is already up to date with the template!"
+    echo "â Your project is already up to date with the template!"
     exit 0
 fi
 
-echo "ğŸ“ Found $CHANGES new commits in the template."
+echo "ğ Found $CHANGES new commits in the template."
 echo ""
 echo "Recent template changes:"
 git log HEAD..upstream/$TEMPLATE_BRANCH --oneline --no-merges -5 2>/dev/null || echo "Unable to show changes"
 echo ""
 
 if ! prompt_user "Do you want to merge these changes?"; then
-    echo "âŒ Merge cancelled by user."
+    echo "â Merge cancelled by user."
     exit 0
 fi
 
 # Merge changes from the upstream template
-echo "ğŸ”€ Merging changes from upstream/$TEMPLATE_BRANCH into your current branch..."
+echo "ğ Merging changes from upstream/$TEMPLATE_BRANCH into your current branch..."
 if git merge upstream/"$TEMPLATE_BRANCH" --allow-unrelated-histories -m "Merge template updates from upstream"; then
-    echo "âœ… Update completed successfully! No conflicts to resolve."
-    echo "ğŸ‰ Your project is now up to date with the template."
+    echo "â Update completed successfully! No conflicts to resolve."
+    echo "ğ Your project is now up to date with the template."
 else
     echo ""
-    echo "âš ï¸  Merge conflicts occurred during the update."
+    echo "â ï¸  Merge conflicts occurred during the update."
     resolve_conflicts_automatically
     if [ $? -eq 0 ]; then
-        echo "âœ… Update completed successfully!"
-        echo "ğŸ‰ Your project is now up to date with the template."
+        echo "â Update completed successfully!"
+        echo "ğ Your project is now up to date with the template."
     else
-        echo "âŒ Update was aborted."
-        echo "ğŸ’¡ You can run this script again later, or manually resolve conflicts using:"
+        echo "â Update was aborted."
+        echo "ğ¡ You can run this script again later, or manually resolve conflicts using:"
         echo "   git status          # See conflicted files"
         echo "   git merge --abort   # Cancel the merge"
         exit 1
@@ -146,7 +146,7 @@ else
 fi
 
 echo ""
-echo "ğŸ“‹ Next steps:"
-echo "â€¢ Review the changes: git log --oneline -10"
-echo "â€¢ Test your project to ensure everything works"
-echo "â€¢ Push changes to your remote repository: git push origin main"
+echo "ğ Next steps:"
+echo "â¢ Review the changes: git log --oneline -10"
+echo "â¢ Test your project to ensure everything works"
+echo "â¢ Push changes to your remote repository: git push origin main"
